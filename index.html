@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BATMAN | Mission HQ</title>
+<style>
+:root{
+  --bg:#090b10;--panel:#121722;--panel2:#1a2230;
+  --line:#293244;--yellow:#ffd43b;--text:#f4f6fa;
+  --muted:#9ca8ba;--green:#58d6a0;--red:#ff8585;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
+header{padding:22px 5%;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.brand{font-weight:900;font-size:23px;letter-spacing:2px}
+.brand span{color:var(--yellow)}
+header small{color:var(--muted)}
+nav{display:flex;gap:8px;padding:12px 5%;overflow-x:auto;border-bottom:1px solid var(--line);background:#0d1119;position:sticky;top:0;z-index:5}
+nav button{background:transparent;color:var(--muted);border:1px solid transparent;white-space:nowrap}
+nav button.active{background:#282516;color:var(--yellow);border-color:#63551f}
+main{max-width:1050px;margin:auto;padding:25px 17px 50px}
+.page{display:none}.page.active{display:block}
+.hero{padding:26px;border:1px solid #5a4b1c;border-radius:16px;background:linear-gradient(120deg,#1d2027,#111621);margin-bottom:18px}
+.eyebrow{font-size:11px;color:var(--yellow);letter-spacing:2px;font-weight:bold}
+h1{font-size:clamp(26px,5vw,38px);margin:8px 0}
+h2{font-size:20px;margin:0 0 15px}
+h3{font-size:15px;margin:0 0 8px}
+p{color:var(--muted);line-height:1.55;margin:7px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:19px;margin-bottom:16px;min-width:0}
+.stat{font-size:28px;font-weight:800;color:var(--yellow)}
+.label{font-size:11px;letter-spacing:1px;color:var(--muted);margin-top:4px}
+input,select,textarea{width:100%;padding:12px;background:#0b1018;border:1px solid var(--line);border-radius:9px;color:var(--text);font:inherit;margin:5px 0 10px}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--yellow);margin:0;flex-shrink:0}
+button{background:var(--yellow);color:#141414;border:0;border-radius:8px;padding:11px 14px;font-weight:bold;cursor:pointer}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+button.danger{background:#3b2028;color:#ffbfc4}
+.row{display:flex;align-items:center;gap:8px}
+.row input{min-width:0;flex:1}
+.list-item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.list-item:last-child{border-bottom:0}
+.list-item .item-text{flex:1;min-width:0}
+.list-item.done .item-text{color:var(--muted);text-decoration:line-through}
+.list-item button{padding:7px 10px;flex-shrink:0}
+.progress{height:8px;background:#293244;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:var(--yellow);width:0%;transition:width .2s}
+.tag{font-size:11px;color:var(--yellow);background:#292617;padding:5px 8px;border-radius:5px;display:inline-block}
+.checkline{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.checkline span{flex:1}
+.small{font-size:12px;color:var(--muted)}
+.deadline{border:1px solid var(--line);border-radius:10px;padding:13px;margin:10px 0}
+.deadline strong{display:block;margin-bottom:4px}
+.notice{font-size:12px;color:var(--green);min-height:17px;margin-top:8px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
+@media(max-width:600px){
+ header{padding:18px 15px}header small{font-size:10px}
+ main{padding:18px 12px 35px}.hero{padding:20px}
+ .grid{grid-template-columns:1fr}.stats{gap:7px}
+ .card{padding:15px}.stat{font-size:23px}.label{font-size:9px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">🦇 BAT<span>MAN</span></div>
+  <small>MISSION HQ / 01</small>
+</header>
+
+<nav aria-label="Main navigation">
+  <button class="active" data-page="missions">01 Missions</button>
+  <button data-page="learning">02 Learning</button>
+  <button data-page="fitness">03 Fitness</button>
+  <button data-page="deadlines">04 College & Goals</button>
+</nav>
+
+<main>
+<!-- PAGE 1: DAILY MISSIONS -->
+<section id="missions" class="page active">
+  <div class="hero">
+    <div class="eyebrow">GOTHAM CITY · DAILY OPERATIONS</div>
+    <h1>Welcome back, Batman.</h1>
+    <p id="dateText"></p>
+    <p>Small actions every day. A stronger future, one mission at a time.</p>
+  </div>
+
+  <div class="stats">
+    <div class="card"><div class="stat" id="dailyStreak">0</div><div class="label">DAILY STREAK 🔥</div></div>
+    <div class="card"><div class="stat" id="missionCount">0/0</div><div class="label">MISSIONS DONE</div></div>
+    <div class="card"><div class="stat" id="missionPercent">0%</div><div class="label">TODAY'S PROGRESS</div></div>
+  </div>
+
+  <div class="card">
+    <h2>+ Create a Mission</h2>
+    <form id="missionForm">
+      <input id="missionInput" maxlength="120" placeholder="What do you need to do today?" required>
+      <div class="row">
+        <select id="missionCategory" aria-label="Mission category">
+          <option>Study</option><option>Project</option><option>Career</option>
+          <option>Personal</option><option>College</option>
+        </select>
+        <button type="submit">Add Mission</button>
+      </div>
+    </form>
+    <div class="small">Tick a mission when you complete it. Your daily streak increases when you complete at least one mission that day.</div>
+  </div>
+
+  <div class="card">
+    <h2>All Your Missions</h2>
+    <div class="row">
+      <select id="missionFilter" aria-label="Filter missions">
+        <option value="all">All missions</option>
+        <option value="pending">Remaining</option>
+        <option value="done">Completed</option>
+      </select>
+      <button class="secondary" id="clearCompleted">Clear completed</button>
+    </div>
+    <div class="progress"><div id="missionBar"></div></div>
+    <div id="missionList"></div>
+    <p id="noMissions">No missions yet. Create your first one above.</p>
+  </div>
+</section>
+
+<!-- PAGE 2: LEARNING -->
+<section id="learning" class="page">
+  <div class="hero">
+    <div class="eyebrow">KNOWLEDGE & SKILLS</div>
+    <h1>Build your foundation.</h1>
+    <p>Learn electronics from the beginning while developing programming skills. Tick topics when you have genuinely learned them.</p>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Electronics Fundamentals</h2>
+    <div class="progress"><div id="electronicsBar"></div></div>
+    <p id="electronicsProgress" class="small">0% completed</p>
+    <div id="electronicsList"></div>
+  </div>
+
+  <div class="card">
+    <h2>💻 Programming & HDL</h2>
+    <p>Four separate skill tracks. Learn them progressively instead of trying to master everything at once.</p>
+    <div id="skillsList"></div>
+  </div>
+
+  <div class="card">
+    <h2>📌 My Learning Notes</h2>
+    <textarea id="learningNotes" rows="5" placeholder="Write what you learned, doubts to solve, or topics to revise..."></textarea>
+    <p class="small">Notes save automatically in this browser.</p>
+  </div>
+</section>
+
+<!-- PAGE 3: FITNESS -->
+<section id="fitness" class="page">
+  <div class="hero">
+    <div class="eyebrow">PHYSICAL TRAINING</div>
+    <h1>Train like a hero.</h1>
+    <p>Consistency beats extreme workouts. Do a realistic workout and build your routine gradually.</p>
+  </div>
+
+  <div class="stats">
+    <div class="card"><div class="stat" id="exerciseStreak">0</div><div class="label">CURRENT STREAK 🔥</div></div>
+    <div class="card"><div class="stat" id="bestStreak">0</div><div class="label">HIGHEST STREAK 🏆</div></div>
+    <div class="card"><div class="stat" id="exerciseTotal">0</div><div class="label">TOTAL WORKOUT DAYS</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Today's Workout</h2>
+    <p id="workoutDate"></p>
+    <label class="checkline">
+      <input type="checkbox" id="exerciseCheck">
+      <span><strong>I completed today's exercise.</strong><br><span class="small">Walking, gym, or a sensible home workout counts.</span></span>
+    </label>
+    <p id="exerciseStatus" class="notice"></p>
+  </div>
+
+  <div class="card">
+    <h2>My Workout Plan</h2>
+    <p>Adjust this plan to your ability. Rest when needed; you do not need to train hard every day.</p>
+    <div id="workoutPlan"></div>
+  </div>
+</section>
+
+<!-- PAGE 4: CHALLENGES & COLLEGE -->
+<section id="deadlines" class="page">
+  <div class="hero">
+    <div class="eyebrow">LONG-TERM OPERATIONS</div>
+    <h1>Plan the mission.</h1>
+    <p>Set a challenge end date, track college work, and keep exam deadlines visible.</p>
+  </div>
+
+  <div class="card">
+    <h2>🎯 My Challenge Countdown</h2>
+    <label for="challengeName">Challenge name</label>
+    <input id="challengeName" maxlength="100" placeholder="Example: 90-day Batman transformation">
+    <label for="challengeStart">Start date</label>
+    <input id="challengeStart" type="date">
+    <label for="challengeEnd">Target completion date</label>
+    <input id="challengeEnd" type="date">
+    <button id="saveChallenge">Save Challenge</button>
+    <div class="progress"><div id="challengeBar"></div></div>
+    <h1 id="daysLeft">— days</h1>
+    <p id="challengeSummary">Set your challenge dates to begin tracking.</p>
+    <p class="notice" id="challengeStatus"></p>
+  </div>
+
+  <div class="card">
+    <h2>🎓 College & Exams</h2>
+    <p>Add exams, internal assessments, assignments, lab records, and backlog preparation deadlines.</p>
+    <form id="deadlineForm">
+      <label for="deadlineName">Task or exam name</label>
+      <input id="deadlineName" maxlength="120" placeholder="Example: Control Systems exam" required>
+      <label for="deadlineDate">Due date</label>
+      <input id="deadlineDate" type="date" required>
+      <div class="row">
+        <select id="deadlineType" aria-label="Deadline category">
+          <option>Exam</option><option>Internal Assessment</option>
+          <option>Assignment</option><option>Lab</option><option>Backlog</option><option>Other</option>
+        </select>
+        <button type="submit">Add Deadline</button>
+      </div>
+    </form>
+    <div id="deadlineList"></div>
+    <p id="noDeadlines">No college deadlines added yet.</p>
+  </div>
+</section>
+</main>
+
+<footer>DISCIPLINE OVER MOTIVATION · ONE DAY AT A TIME · 🦇</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const STORE = "batmanHQ_multiPage_v2";
+const today = () => {
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+};
+const dateObj = s => {
+  if (!s) return null;
+  const d = new Date(s+"T12:00:00");
+  return Number.isNaN(d.getTime()) ? null : d;
+};
+const dayDiff = (a,b) => Math.round((dateObj(b)-dateObj(a))/86400000);
+const pretty = s => dateObj(s)?.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) || "Not set";
+
+const electronics = [
+  "Voltage, current and resistance",
+  "Ohm's law and simple numerical problems",
+  "Series and parallel circuits",
+  "Electrical power and energy",
+  "Kirchhoff's current and voltage laws",
+  "Capacitors and inductors",
+  "Diodes and rectifier basics",
+  "Transistors: structure and working",
+  "BJT: NPN, PNP and operating regions",
+  "MOSFET: structure and switching",
+  "Digital logic gates and truth tables",
+  "Boolean algebra and K-maps"
+];
+
+const skills = [
+  {name:"Verilog / HDL",desc:"Digital logic → modules → testbenches → simple projects",items:["Learn HDL and digital design basics","Write simple Verilog modules","Build a testbench and simulate","Complete a small digital design project"]},
+  {name:"Python",desc:"Programming basics and useful automation",items:["Variables, types and input/output","Conditions and loops","Functions, lists and dictionaries","Build a small Python project"]},
+  {name:"C Programming",desc:"Build problem-solving and programming fundamentals",items:["Variables, operators and input/output","Conditions and loops","Functions, arrays and strings","Pointers, structures and practice problems"]},
+  {name:"HTML & CSS",desc:"Create websites and publish projects",items:["HTML structure, headings and links","Forms, images and semantic HTML","CSS selectors, box model and layout","Build and publish a responsive website"]}
+];
+
+function fresh(){
+ return {
+  missions:[], missionDays:[],
+  electronics:Array(electronics.length).fill(false),
+  skills:skills.map(s=>Array(s.items.length).fill(false)),
+  learningNotes:"",
+  exerciseDays:[], exerciseBest:0, workoutPlan:"",
+  challenge:{name:"",start:"",end:""},
+  deadlines:[]
+ };
+}
+let data;
+try {
+ const stored=JSON.parse(localStorage.getItem(STORE)||"null");
+ data=stored?{...fresh(),...stored}:fresh();
+} catch {data=fresh();}
+if(!Array.isArray(data.missions))data.missions=[];
+if(!Array.isArray(data.missionDays))data.missionDays=[];
+if(!Array.isArray(data.exerciseDays))data.exerciseDays=[];
+if(!Array.isArray(data.deadlines))data.deadlines=[];
+if(!Array.isArray(data.electronics))data.electronics=fresh().electronics;
+if(!Array.isArray(data.skills))data.skills=fresh().skills;
+
+function save(){
+ try{localStorage.setItem(STORE,JSON.stringify(data));}
+ catch{alert("Unable to save data. Please check your browser storage.");}
+}
+function streak(days){
+ const set=new Set(days);
+ let n=0,d=today();
+ if(!set.has(d)){
+  const y=dateObj(d);y.setDate(y.getDate()-1);
+  d=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+ }
+ while(set.has(d)){
+  n++;
+  const y=dateObj(d);y.setDate(y.getDate()-1);
+  d=y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+ }
+ return n;
+}
+function recordMissionDay(){
+ if(data.missions.some(m=>m.done&&m.doneOn===today())&&!data.missionDays.includes(today())){
+  data.missionDays.push(today());
+ }
+}
+function switchPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>switchPage(b.dataset.page)));
+
+function renderMissions(){
+ const list=$("missionList");list.innerHTML="";
+ const filter=$("missionFilter").value;
+ const visible=data.missions.filter(m=>filter==="all"||(filter==="done"?m.done:!m.done));
+ $("noMissions").style.display=visible.length?"none":"block";
+ visible.forEach(m=>{
+  const row=document.createElement("div");row.className="list-item"+(m.done?" done":"");
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=m.done;
+  cb.setAttribute("aria-label","Complete "+m.text);
+  cb.addEventListener("change",()=>{
+   m.done=cb.checked;m.doneOn=cb.checked?today():null;
+   recordMissionDay();save();renderMissions();
+  });
+  const txt=document.createElement("span");txt.className="item-text";
+  const strong=document.createElement("strong");strong.textContent=m.text;
+  const small=document.createElement("div");small.className="small";small.textContent=m.category;
+  txt.append(strong,small);
+  const del=document.createElement("button");del.className="danger";del.textContent="×";
+  del.setAttribute("aria-label","Delete "+m.text);
+  del.addEventListener("click",()=>{data.missions=data.missions.filter(x=>x.id!==m.id);save();renderMissions();});
+  row.append(cb,txt,del);list.append(row);
+ });
+ const done=data.missions.filter(m=>m.done).length,total=data.missions.length;
+ const pct=total?Math.round(done/total*100):0;
+ $("missionCount").textContent=done+"/"+total;
+ $("missionPercent").textContent=pct+"%";
+ $("missionBar").style.width=pct+"%";
+ $("dailyStreak").textContent=streak(data.missionDays);
+}
+$("missionForm").addEventListener("submit",e=>{
+ e.preventDefault();const text=$("missionInput").value.trim();if(!text)return;
+ data.missions.push({id:Date.now()+Math.random(),text,category:$("missionCategory").value,done:false,doneOn:null});
+ $("missionInput").value="";save();renderMissions();
+});
+$("missionFilter").addEventListener("change",renderMissions);
+$("clearCompleted").addEventListener("click",()=>{
+ data.missions=data.missions.filter(m=>!m.done);save();renderMissions();
+});
+
+function renderLearning(){
+ const list=$("electronicsList");list.innerHTML="";
+ electronics.forEach((name,i)=>{
+  const label=document.createElement("label");label.className="checkline";
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!data.electronics[i];
+  const text=document.createElement("span");text.textContent=name;
+  cb.addEventListener("change",()=>{data.electronics[i]=cb.checked;save();renderLearning();});
+  label.append(cb,text);list.append(label);
+ });
+ const n=data.electronics.filter(Boolean).length,p=Math.round(n/electronics.length*100);
+ $("electronicsBar").style.width=p+"%";$("electronicsProgress").textContent=p+"% completed ("+n+"/"+electronics.length+")";
+ const root=$("skillsList");root.innerHTML="";
+ skills.forEach((skill,i)=>{
+  const box=document.createElement("div");box.className="deadline";
+  const h=document.createElement("h3");h.textContent=skill.name;
+  const desc=document.createElement("p");desc.textContent=skill.desc;
+  const bar=document.createElement("div");bar.className="progress";
+  const fill=document.createElement("div");const count=(data.skills[i]||[]).filter(Boolean).length;
+  fill.style.width=Math.round(count/skill.items.length*100)+"%";bar.append(fill);
+  box.append(h,desc,bar);
+  skill.items.forEach((item,j)=>{
+   const label=document.createElement("label");label.className="checkline";
+   const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!data.skills[i]?.[j];
+   const text=document.createElement("span");text.textContent=item;
+   cb.addEventListener("change",()=>{data.skills[i][j]=cb.checked;save();renderLearning();});
+   label.append(cb,text);box.append(label);
+  });
+  root.append(box);
+ });
+ $("learningNotes").value=data.learningNotes||"";
+}
+$("learningNotes").addEventListener("input",()=>{data.learningNotes=$("learningNotes").value;save();});
+
+function renderFitness(){
+ const done=data.exerciseDays.includes(today());
+ $("exerciseCheck").checked=done;
+ $("workoutDate").textContent="Today: "+pretty(today());
+ $("exerciseStreak").textContent=streak(data.exerciseDays);
+ $("exerciseTotal").textContent=new Set(data.exerciseDays).size;
+ $("bestStreak").textContent=data.exerciseBest||0;
+ $("exerciseStatus").textContent=done?"Workout recorded for today. Great work!":"No workout recorded today yet.";
+ const plan=[
+  ["Monday","Full-body strength or beginner bodyweight routine"],
+  ["Tuesday","Walking or easy cardio"],
+  ["Wednesday","Full-body strength or beginner bodyweight routine"],
+  ["Thursday","Walking, cycling or mobility"],
+  ["Friday","Full-body strength or beginner bodyweight routine"],
+  ["Saturday","Easy activity you enjoy"],
+  ["Sunday","Rest and recovery"]
+ ];
+ const root=$("workoutPlan");root.innerHTML="";
+ plan.forEach(([day,desc])=>{
+  const div=document.createElement("div");div.className="checkline";
+  const text=document.createElement("span");text.innerHTML="<strong>"+day+"</strong><br><span class='small'></span>";
+  text.querySelector("span").textContent=desc;div.append(text);root.append(div);
+ });
+}
+$("exerciseCheck").addEventListener("change",()=>{
+ if($("exerciseCheck").checked){
+  if(!data.exerciseDays.includes(today()))data.exerciseDays.push(today());
+ }else{
+  data.exerciseDays=data.exerciseDays.filter(d=>d!==today());
+ }
+ let best=0,current=0,previous=null;
+ [...new Set(data.exerciseDays)].sort().forEach(d=>{
+  current=previous&&dayDiff(previous,d)===1?current+1:1;
+  best=Math.max(best,current);previous=d;
+ });
+ data.exerciseBest=Math.max(data.exerciseBest||0,best);
+ save();renderFitness();
+});
+
+function renderChallenge(){
+ const c=data.challenge||{};
+ $("challengeName").value=c.name||"";
+ $("challengeStart").value=c.start||"";
+ $("challengeEnd").value=c.end||"";
+ const start=c.start,end=c.end;
+ if(!start||!end||!dateObj(start)||!dateObj(end)||end<start){
+  $("daysLeft").textContent="— days";
+  $("challengeSummary").textContent="Set valid start and end dates to begin.";
+  $("challengeBar").style.width="0%";return;
+ }
+ const remaining=dayDiff(today(),end);
+ const duration=dayDiff(start,end);
+ const elapsed=dayDiff(start,today());
+ const pct=duration<=0?(today()>=end?100:0):Math.max(0,Math.min(100,elapsed/duration*100));
+ $("daysLeft").textContent=remaining>0?remaining+" days":remaining===0?"Ends today":"Completed";
+ $("challengeSummary").textContent=(c.name||"Your challenge")+" · "+pretty(start)+" → "+pretty(end);
+ $("challengeBar").style.width=pct+"%";
+ $("challengeStatus").textContent=remaining<0?"Your target date has passed. Set a new date if needed.":"Challenge timeline: "+Math.round(pct)+"% elapsed.";
+}
+$("saveChallenge").addEventListener("click",()=>{
+ const name=$("challengeName").value.trim(),start=$("challengeStart").value,end=$("challengeEnd").value;
+ if(!start||!end||end<start){alert("Please select a valid start date and completion date.");return;}
+ data.challenge={name,start,end};save();renderChallenge();
+ $("challengeStatus").textContent="Challenge saved.";
+});
+
+function renderDeadlines(){
+ const root=$("deadlineList");root.innerHTML="";
+ const items=[...data.deadlines].sort((a,b)=>a.date.localeCompare(b.date));
+ $("noDeadlines").style.display=items.length?"none":"block";
+ items.forEach(item=>{
+  const box=document.createElement("div");box.className="deadline";
+  const row=document.createElement("div");row.className="row";
+  const info=document.createElement("div");info.style.flex="1";
+  const title=document.createElement("strong");title.textContent=item.name;
+  const meta=document.createElement("p");meta.textContent=item.type+" · "+pretty(item.date);
+  const left=dayDiff(today(),item.date);
+  const count=document.createElement("div");count.className="small";
+  count.textContent=left<0?Math.abs(left)+" day(s) past due":left===0?"Due today":left+" day(s) remaining";
+  info.append(title,meta,count);
+  const del=document.createElement("button");del.className="danger";del.textContent="×";
+  del.setAttribute("aria-label","Delete "+item.name);
+  del.addEventListener("click",()=>{data.deadlines=data.deadlines.filter(x=>x.id!==item.id);save();renderDeadlines();});
+  row.append(info,del);box.append(row);root.append(box);
+ });
+}
+$("deadlineForm").addEventListener("submit",e=>{
+ e.preventDefault();const name=$("deadlineName").value.trim(),date=$("deadlineDate").value;
+ if(!name||!date)return;
+ data.deadlines.push({id:Date.now()+Math.random(),name,date,type:$("deadlineType").value});
+ $("deadlineName").value="";$("deadlineDate").value="";save();renderDeadlines();
+});
+
+$("dateText").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+renderMissions();renderLearning();renderFitness();renderChallenge();renderDeadlines();
+</script>
+</body>
+</html>
